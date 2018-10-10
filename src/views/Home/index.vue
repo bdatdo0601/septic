@@ -1,7 +1,8 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <h1 id="title">{{ title }}</h1>
+    <FucksCounter :counter="fucksGiven" ></FucksCounter>
+    <FucksChart id="chart" :fucksHistoryData="fucksHistory" :height="400" :width="600" :styles="{ display: 'inline-block' }"></FucksChart>
   </div>
 </template>
 
