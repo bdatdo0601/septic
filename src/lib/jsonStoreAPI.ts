@@ -15,7 +15,8 @@ export interface FuckHistoryResponse {
     ok: boolean;
 }
 
-const JSONSTORE_URL = `https://www.jsonstore.io/${process.env.VUE_APP_JSON_STORE_KEY}`;
+// tslint:disable-next-line:max-line-length
+const JSONSTORE_URL = `https://www.jsonstore.io/${process.env.VUE_APP_JSON_STORE_KEY || "41d64a309ce2822eab6c2311dd679722d33417490c48177d869307f29ccd474c"}`;
 
 const CURRENT_FUCKS_GIVEN_KEY = "currentFucksGiven";
 const FUCK_GIVEN_HISTORY_KEY = "fucksHistory";
@@ -35,14 +36,14 @@ const initCurrentFucks = async () => {
 const getCurrentFucks = async () => {
     const response = await axios.get<CurrentFucksGivenResponse>(
         `${JSONSTORE_URL}/${CURRENT_FUCKS_GIVEN_KEY}`, configOptions);
-    return response.data.result.amount;
+    return response.data.result ? response.data.result.amount : 0;
 };
 
 const updateCurrentFucks = async (newFucksGivenAmount: number) => {
-    const response = await axios.put<CurrentFucksGivenResponse>(`${JSONSTORE_URL}/${CURRENT_FUCKS_GIVEN_KEY}`, {
+    await axios.put<CurrentFucksGivenResponse>(`${JSONSTORE_URL}/${CURRENT_FUCKS_GIVEN_KEY}`, {
         amount: newFucksGivenAmount,
     }, configOptions);
-    return response.data.result.amount;
+    return await getCurrentFucks();
 };
 
 const initFuckGivenHistory = async () => {
@@ -53,16 +54,16 @@ const initFuckGivenHistory = async () => {
 
 const getFuckGivenHistory = async () => {
     const response = await axios.get<FuckHistoryResponse>(`${JSONSTORE_URL}/${FUCK_GIVEN_HISTORY_KEY}`, configOptions);
-    return response.data.result.data;
+    return response.data.result ? response.data.result.data : [];
 };
 
 const addNewFuckGivenData = async (data: FuckHistoryElement) => {
     const fuckGivenData = await getFuckGivenHistory();
     const updatedHistory = fuckGivenData ? [...fuckGivenData, data] : [data];
-    const response = await axios.put<FuckHistoryResponse>(`${JSONSTORE_URL}/${FUCK_GIVEN_HISTORY_KEY}`, {
+    await axios.put<FuckHistoryResponse>(`${JSONSTORE_URL}/${FUCK_GIVEN_HISTORY_KEY}`, {
         data: updatedHistory,
     }, configOptions);
-    return response.data.result.data;
+    return await getFuckGivenHistory();
 };
 
 export default ({

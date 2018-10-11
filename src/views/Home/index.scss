@@ -5,3 +5,28 @@
 #chart {
   margin: 0 auto;
 }
+
+#errorTitle {
+  color: red;
+  font-size: 30px;
+}
+
+#errorMessage {
+  color: red;
+  font-size: 20px;
+}
+
+#updateModal {
+  padding: 14px;
+}
+
+#fucksCounterInput {
+  width: 70%;
+  display: block;
+  margin-bottom: 24px;
+}
+
+#submitButton {
+  width: 100%;
+  height: 50px;
+}
