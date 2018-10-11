@@ -1,5 +1,4 @@
 import { Component, Prop, Vue, Model } from "vue-property-decorator";
-import schedule from "node-schedule";
 import _ from "lodash";
 import FucksCounter from "@/components/FucksCounter/index.vue"; // @ is an alias to /src
 import FucksChart from "@/components/FucksChart/index.vue";
