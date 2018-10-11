@@ -54,6 +54,7 @@ export default class Home extends Vue {
 
     private mounted() {
         this.getMostRecentData();
+        setInterval(this.getMostRecentData, 1000 * 60 * 5);
     }
 
     private onClearClick() {

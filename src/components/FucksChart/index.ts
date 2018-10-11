@@ -16,7 +16,7 @@ export default class FucksChart extends mixins(Line) {
                 if (index === 0) { return "Beginning of Time"; }
                 return element.timeframe;
             }).concat(["Now"]),
-
+            data: this.fucksHistoryData.map((element) => element.amount).concat([this.currentFucksGiven]),
         } : {
                 labels: ["Beginning of Time", "Now"],
                 data: [0, this.currentFucksGiven],
