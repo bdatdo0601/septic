@@ -1,3 +1,6 @@
+$animationDuration: 1s; // specify animation duration. Default value: 1s
+@import "./sass/vue2-animate.scss";
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
