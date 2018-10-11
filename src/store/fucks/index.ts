@@ -1,4 +1,5 @@
 import { Module } from "vuex";
+import _ from "lodash";
 import { RootState, FucksState } from "@/store/types";
 import JSONStoreAPI from "@/lib/jsonStoreAPI";
 
@@ -7,6 +8,7 @@ export const FUCKS_ACTIONS = {
     UPDATE_MOST_RECENT_FUCKS: "updateMostRecentFucks",
     GET_RECENT_FUCKS_HISTORY: "getRecentFucksHistory",
     ADD_DATA_TO_FUCKS_HISTORY: "addDataToFucksHistory",
+    CLEAR_ALL_FUCKS: "clearAllFucks",
 };
 
 export const FUCKS_MUTATION = {
@@ -60,11 +62,29 @@ const fucksModule: Module<FucksState, RootState> = {
         },
     },
     actions: { // for asynchronous changes
+        [FUCKS_ACTIONS.CLEAR_ALL_FUCKS]: async ({ commit }) => {
+            try {
+                commit(FUCKS_MUTATION.ON_FUCK_HISTORY_REQUEST_PENDING);
+                commit(FUCKS_MUTATION.ON_RECENT_FUCKS_REQUEST_PENDING);
+                await JSONStoreAPI.initCurrentFucks();
+                await JSONStoreAPI.initFuckGivenHistory();
+                setTimeout(() => {
+                    commit(FUCKS_MUTATION.ON_RECENT_FUCKS_REQUEST_SUCCESS, { mostRecentFucksGiven: 0 });
+                    commit(FUCKS_MUTATION.ON_FUCK_HISTORY_REQUEST_SUCCESS, { fucksHistory: [] });
+                }, 500);
+
+            } catch (error) {
+                commit(FUCKS_MUTATION.ON_FUCK_HISTORY_REQUEST_FAILURE);
+                commit(FUCKS_MUTATION.ON_RECENT_FUCKS_REQUEST_FAILURE);
+            }
+        },
         [FUCKS_ACTIONS.GET_MOST_RECENT_FUCKS]: async ({ commit }) => {
             try {
                 commit(FUCKS_MUTATION.ON_RECENT_FUCKS_REQUEST_PENDING);
                 const mostRecentFucksGiven = await JSONStoreAPI.getCurrentFucks();
-                commit(FUCKS_MUTATION.ON_RECENT_FUCKS_REQUEST_SUCCESS, { mostRecentFucksGiven });
+                setTimeout(() => {
+                    commit(FUCKS_MUTATION.ON_RECENT_FUCKS_REQUEST_SUCCESS, { mostRecentFucksGiven });
+                }, 500);
             } catch (error) {
                 commit(FUCKS_MUTATION.ON_RECENT_FUCKS_REQUEST_FAILURE, { errorMessage: error.message });
             }
@@ -85,7 +105,14 @@ const fucksModule: Module<FucksState, RootState> = {
             try {
                 commit(FUCKS_MUTATION.ON_FUCK_HISTORY_REQUEST_PENDING);
                 const mostRecentFucksHistory = await JSONStoreAPI.getFuckGivenHistory();
-                commit(FUCKS_MUTATION.ON_FUCK_HISTORY_REQUEST_SUCCESS, { fucksHistory: mostRecentFucksHistory });
+                setTimeout(
+                    () => {
+                        commit(
+                            FUCKS_MUTATION.ON_FUCK_HISTORY_REQUEST_SUCCESS, { fucksHistory: mostRecentFucksHistory },
+                        );
+                    },
+                    500,
+                );
             } catch (error) {
                 commit(FUCKS_MUTATION.ON_FUCK_HISTORY_REQUEST_FAILURE, { errorMessage: error.message });
             }

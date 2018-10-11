@@ -6,17 +6,37 @@ import { Line } from "vue-chartjs";
 @Component
 export default class FucksChart extends mixins(Line) {
     @Prop({ default: () => [] }) private fucksHistoryData!: FuckHistoryElement[];
-    public mounted() {
-        const formattedData = this.fucksHistoryData && this.fucksHistoryData.length > 0 ?
-            this.fucksHistoryData.map((element) => element.amount) : [0];
+    @Prop({ default: 0 }) private currentFucksGiven!: number;
+    @Prop({ default: true }) private loading!: boolean;
+
+    private displayChart() {
+        if (this.loading) { return; }
+        const formattedData = this.fucksHistoryData && this.fucksHistoryData.length > 0 ? {
+            labels: this.fucksHistoryData.map((element, index) => {
+                if (index === 0) { return "Beginning of Time"; }
+                return element.timeframe;
+            }).concat(["Now"]),
+            data: this.fucksHistoryData.map((element) => element.amount).concat([this.currentFucksGiven]),
+        } : {
+                labels: ["Beginning of Time", "Now"],
+                data: [0, this.currentFucksGiven],
+            };
         this.renderChart({
-            labels: ["Beginning of time", "Now"],
+            labels: formattedData.labels,
             datasets: [{
                 label: "Fucks Given",
                 borderColor: "red",
                 fill: false,
-                data: formattedData,
+                data: formattedData.data,
             }],
         }, { responsive: true });
+
+    }
+
+    private mounted() {
+        this.displayChart();
+    }
+    private updated() {
+        this.displayChart();
     }
 }
