@@ -3,7 +3,7 @@ module.exports = {
     s3Deploy: {
       awsProfile: "default",
       region: "us-east-1",
-      bucket: "fivani",
+      bucket: "www.howmanyfucksdoesshivanigive.com",
       createBucket: true,
       staticHosting: true,
       staticIndexPage: "index.html",
