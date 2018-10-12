@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import App from "./App/index.vue";
 import router from "./router";
 import store from "@/store";
-import JSONStoreAPI from "@/lib/jsonStoreAPI";
+import myJSONAPI from "@/lib/myJSONAPI";
 import "./registerServiceWorker";
 dotenv.config();
 
@@ -12,11 +12,11 @@ Vue.config.productionTip = false;
 
 Vue.use(VModal, { dialog: true });
 
-if (process.env.VUE_APP_INIT) {
-  Promise.all([JSONStoreAPI.initCurrentFucks(), JSONStoreAPI.initFuckGivenHistory()]).catch(() => {
-    throw new Error("Unable to establish backend");
-  });
-}
+// if (process.env.VUE_APP_INIT) {
+//   Promise.all([myJSONAPI.initCurrentFucks(), myJSONAPI.initFuckGivenHistory()]).catch(() => {
+//     throw new Error("Unable to establish backend");
+//   });
+// }
 
 new Vue({
   router,
