@@ -64,13 +64,10 @@ const fucksModule: Module<FucksState, RootState> = {
     actions: { // for asynchronous changes
         [FUCKS_ACTIONS.CLEAR_ALL_FUCKS]: async ({ commit }) => {
             try {
-                commit(FUCKS_MUTATION.ON_FUCK_HISTORY_REQUEST_PENDING);
                 commit(FUCKS_MUTATION.ON_RECENT_FUCKS_REQUEST_PENDING);
                 await MyJSONAPI.initCurrentFucks();
-                await MyJSONAPI.initFuckGivenHistory();
                 setTimeout(() => {
                     commit(FUCKS_MUTATION.ON_RECENT_FUCKS_REQUEST_SUCCESS, { mostRecentFucksGiven: 0 });
-                    commit(FUCKS_MUTATION.ON_FUCK_HISTORY_REQUEST_SUCCESS, { fucksHistory: [] });
                 }, 500);
 
             } catch (error) {
